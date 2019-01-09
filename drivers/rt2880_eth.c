@@ -1960,7 +1960,7 @@ void rt305x_esw_init(void)
 
 #define RSTCTRL_EPHY_RST	(1<<24)
 #define MT7628_EPHY_EN	        (0x1f<<16)
-#define MT7628_EPHY0_EN	        (0x01<<16)
+#define MT7628_EPHY0_EN	(0x01<<16)
 	/* We shall prevent modifying PHY registers if it is FPGA mode */
 #if defined (RT3052_ASIC_BOARD) || defined (RT3352_ASIC_BOARD) || defined (RT5350_ASIC_BOARD) || defined (MT7628_ASIC_BOARD)
 #if defined (RT3052_ASIC_BOARD)
