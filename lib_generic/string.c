@@ -26,7 +26,7 @@
 #define __HAVE_ARCH_STRNICMP
 #define __HAVE_ARCH_STRCPY
 #define __HAVE_ARCH_STRNCPY
-#define __HAVE_ARCH_STRCAT
+// #define __HAVE_ARCH_STRCAT // delete for build by zhaoyu at 2021.06.08
 #define __HAVE_ARCH_STRNCAT
 #define __HAVE_ARCH_STRCMP
 #define __HAVE_ARCH_STRNCMP
