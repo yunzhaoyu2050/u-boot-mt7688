@@ -75,7 +75,6 @@
 #include "tftp.h"
 #include "rarp.h"
 //#include "nfs.h"
-/* for web failsafe mod , added by mango 20150525 */
 #include "httpd.h"
 #include "../httpd/uipopt.h"
 #include "../httpd/uip.h"
@@ -99,7 +98,6 @@
 #if 0
 #define ET_DEBUG
 #endif
-/* for web failsafe mod , added by mango 20150525 */
 unsigned char *webfailsafe_data_pointer = NULL;
 int	webfailsafe_is_running = 0;
 int	webfailsafe_ready_for_upgrade = 0;

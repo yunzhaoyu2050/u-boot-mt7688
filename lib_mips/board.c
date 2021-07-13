@@ -125,10 +125,12 @@ static char  file_name_space[ARGV_LEN];
         ".set\tpop"                                             \
         : "=r" (__res));                                        \
         __res;})
-//added by mango
 void gpio_init(void);
 void led_on(void);
 void led_off(void);
+void led_init(void);
+void status_led_on( void );
+void status_led_off( void );
 int detect_wps(void);
 void gpio_test( void );
 static void Init_System_Mode(void)
@@ -536,7 +538,7 @@ static int init_func_ram (void)
 static int display_banner(void)
 {
    
-	printf ("\n\nWidora by mango,V1.0.9\n\n");
+	printf ("\n\nmc7628-uboot, v0.0.1\n\n");
 	return (0);
 }
 
@@ -609,7 +611,6 @@ void board_init_f(ulong bootflag)
 	ulong *s;
 	u32 value;
 	u32 fdiv = 0, step = 0, frac = 0, i;
-
 #if defined RT6855_FPGA_BOARD || defined RT6855_ASIC_BOARD || \
     defined MT7620_FPGA_BOARD || defined MT7620_ASIC_BOARD
 	value = le32_to_cpu(*(volatile u_long *)(RALINK_SPI_BASE + 0x10));
@@ -866,7 +867,6 @@ void board_init_f(ulong bootflag)
 	debug ("relocate_code Pointer at: %08lx\n", addr);
 	relocate_code (addr_sp, id, addr);
 #endif
-
 	/* NOTREACHED - relocate_code() does not return */
 }
 
@@ -1954,7 +1954,9 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	}
 /*web failsafe*/
 	gpio_init();
+	led_init();
 	led_off();
+	status_led_off();
 	printf( "\nif you press the WPS button will automatically enter the Update mode\n");
 	int counter = 0;
 	for(i=0;i<10;i++){
@@ -1962,9 +1964,10 @@ void board_init_r (gd_t *id, ulong dest_addr)
 		printf( "\n%d",i);
 		if(detect_wps())
 		{
-		led_on();
-		counter++;
-		break;
+			led_on();
+			status_led_on();
+			counter++;
+			break;
 		}
 	}
 	if ( counter ) {
@@ -2291,7 +2294,6 @@ void board_init_r (gd_t *id, ulong dest_addr)
 			do_bootm(cmdtp, 0, 1, argv);
 			break;            
 		} /* end of switch */   
-
 		do_reset(cmdtp, 0, argc, argv);
 
 	} /* end of else */
@@ -2856,13 +2858,12 @@ void disable_pcie(void)
 	RALINK_REG(RT2880_CLKCFG1_REG) = val;
 #endif
 }
-//added by mango 20160120
 //wled_n GPIO44 WLAN_AN_MODE 2b01
 //WDT GPIO38 WDT_MODE 1b1
 void gpio_init(void)
 {
 	u32 val;
-	printf( "MT7688 gpio init : wled and wdt by mango\n" );
+	printf( "MT7688 gpio init : wled and wdt by v0.0.1\n" );
 	//set gpio2_mode 1:0=2b01 wled,p1,p2,p3,p4 is gpio.p0 is ephy
 	val = 0x551;
 	RALINK_REG(0xb0000634)=0x0f<<7;
@@ -2890,6 +2891,24 @@ void led_off( void )
 	//gpio44 gpio_dset_1 634 set bit12
 	RALINK_REG(0xb0000634)=1<<12;
 }
+
+void led_init(void)
+{
+	u32 val;
+	// status leds
+	val=RALINK_REG(RT2880_REG_PIODIR+0x04);
+	val|=1<<4;
+	RALINK_REG(RT2880_REG_PIODIR+0x04)=val;
+}
+void status_led_on( void )
+{
+	RALINK_REG(0xb0000644)=1<<4;
+}
+void status_led_off( void )
+{
+	RALINK_REG(0xb0000634)=1<<4;
+}
+
 int detect_wps( void )
 {
 	u32 val;
