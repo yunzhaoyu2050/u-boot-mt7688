@@ -1919,7 +1919,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
     defined (RT3352_ASIC_BOARD) || defined (RT3352_FPGA_BOARD)  || \
     defined (RT5350_ASIC_BOARD) || defined (RT5350_FPGA_BOARD)  || \
     defined (MT7628_ASIC_BOARD) || defined (MT7628_FPGA_BOARD)
-	rt305x_esw_init();
+	// rt305x_esw_init(); // 修复交换机初始化导致网口掉线问题 by zhaoyu at 2021.12.16
 #elif defined (RT6855_ASIC_BOARD) || defined (RT6855_FPGA_BOARD) || \
       defined (MT7620_ASIC_BOARD) || defined (MT7620_FPGA_BOARD)
 	rt_gsw_init();
@@ -1972,6 +1972,7 @@ void board_init_r (gd_t *id, ulong dest_addr)
 	}
 	if ( counter ) {
 		printf( "\n\nHTTP server is starting for update...\n\n");
+		rt305x_esw_init(); // 修复交换机初始化导致网口掉线问题 by zhaoyu at 2021.12.16
 		eth_initialize(gd->bd);
 		NetLoopHttpd();
 	}
